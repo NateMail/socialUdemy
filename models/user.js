@@ -32,7 +32,7 @@ userSchema
     // generate timestamp
     this.salt = uuidv1();
     // encrypt password
-    this.hashed_password = this.encryptedPassword(password);
+    this.hashed_password = this.encryptPassword(password);
   })
   .get(function() {
     return this._password;
