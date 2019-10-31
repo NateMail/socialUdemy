@@ -6,10 +6,10 @@ const fs = require('fs');
 exports.postById = (req, res, next, id) => {
   Post.findById(id)
     .populate('postedBy', '_id name')
-    .exec((err, post) => {
-      if (err || !post) {
+    .exec((error, post) => {
+      if (error || !post) {
         return res.status(400).json({
-          error: err
+          error: error
         });
       }
       req.post = post;
@@ -30,8 +30,8 @@ exports.getPosts = (req, res) => {
 exports.createPost = (req, res, next) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
-  form.parse(req, (err, fields, files) => {
-    if (err) {
+  form.parse(req, (error, fields, files) => {
+    if (error) {
       return res.status(400).json({
         error: 'Image could not be uploaded'
       });
@@ -44,10 +44,10 @@ exports.createPost = (req, res, next) => {
       post.photo.data = fs.readFileSync(files.photo.path);
       post.photo.contentType = files.photo.type;
     }
-    post.save((err, result) => {
-      if (err) {
+    post.save((error, result) => {
+      if (error) {
         return res.status(400).json({
-          error: err
+          error: error
         });
       }
       res.json(result);
@@ -59,10 +59,10 @@ exports.postsByUser = (req, res) => {
   Post.find({ postedBy: req.profile._id })
     .populate('postedBy', '_id name')
     .sort('_created')
-    .exec((err, posts) => {
-      if (err) {
+    .exec((error, posts) => {
+      if (error) {
         return res.status(400).json({
-          error: err
+          error: error
         });
       }
       res.json({ posts });
@@ -84,10 +84,10 @@ exports.updatePost = (req, res, next) => {
   let post = req.post;
   post = _.extend(post, req.body);
   post.updated = Date.now();
-  post.save(err => {
-    if (err) {
+  post.save(error => {
+    if (error) {
       return res.status(400).json({
-        error: err
+        error: error
       });
     }
     res.json(post);
@@ -96,10 +96,10 @@ exports.updatePost = (req, res, next) => {
 
 exports.deletePost = (req, res) => {
   let post = req.post;
-  post.remove((err, post) => {
-    if (err) {
+  post.remove((error, post) => {
+    if (error) {
       return res.status(400).json({
-        error: err
+        error: error
       });
     }
     res.json({

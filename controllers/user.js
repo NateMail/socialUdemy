@@ -2,8 +2,8 @@ const _ = require('lodash');
 const User = require('../models/user');
 
 exports.userById = (req, res, next, id) => {
-  User.findById(id).exec((err, user) => {
-    if (err || !user) {
+  User.findById(id).exec((error, user) => {
+    if (error || !user) {
       return res.status(400).json({
         error: 'User not found'
       });
@@ -24,10 +24,10 @@ exports.hasAuthorization = (req, res, next) => {
 };
 
 exports.allUsers = (req, res) => {
-  User.find((err, users) => {
-    if (err) {
+  User.find((error, users) => {
+    if (error) {
       return res.status(400).json({
-        error: err
+        error: error
       });
     }
     res.json({ users });
@@ -45,8 +45,8 @@ exports.updateUser = (req, res, next) => {
   // extend - mutate the source object
   user = _.extend(user, req.body);
   user.updated = Date.now();
-  user.save(err => {
-    if (err) {
+  user.save(error => {
+    if (error) {
       return res.status(400).json({
         error: 'You are not authorized to preform this action'
       });
@@ -59,10 +59,10 @@ exports.updateUser = (req, res, next) => {
 
 exports.deleteUser = (req, res, next) => {
   let user = req.profile;
-  user.remove((err, user) => {
-    if (err) {
+  user.remove((error, user) => {
+    if (error) {
       return res.status(400).json({
-        error: err
+        error: error
       });
     }
     res.json({ message: 'User deleted successfully' });

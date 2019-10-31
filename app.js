@@ -18,8 +18,8 @@ mongoose
   })
   .then(console.log('DB connected'));
 
-mongoose.connection.on('error', err => {
-  console.log(`DB connection error: ${err.message}`);
+mongoose.connection.on('error', error => {
+  console.log(`DB connection error: ${error.message}`);
 });
 // bring in routes
 const postRoutes = require('./routes/post');
@@ -28,10 +28,10 @@ const userRoutes = require('./routes/user');
 
 // apiDocs
 app.get('/', (req, res) => {
-  fs.readFile('docs/apiDocs.json', (err, data) => {
-    if (err) {
+  fs.readFile('docs/apiDocs.json', (error, data) => {
+    if (error) {
       return res.status(400).json({
-        error: err
+        error: error
       });
     }
     const docs = JSON.parse(data);
