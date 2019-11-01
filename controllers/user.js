@@ -30,7 +30,7 @@ exports.allUsers = (req, res) => {
         error: error
       });
     }
-    res.json({ users });
+    res.json(users);
   }).select('name email updated created');
 };
 
