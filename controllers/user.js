@@ -177,3 +177,16 @@ exports.removeFollower = (req, res, next) => {
       res.json(result);
     });
 };
+
+exports.findPeople = (req, res) => {
+  let following = req.profile.following;
+  following.push(req.profile._id);
+  User.find({ _id: { $nin: following } }, (error, users) => {
+    if (error) {
+      return res.status(400).json({
+        error: error
+      });
+    }
+    res.json(users);
+  }).select('name');
+};
