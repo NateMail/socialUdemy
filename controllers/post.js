@@ -81,17 +81,45 @@ exports.isPoster = (req, res, next) => {
   next();
 };
 
+// exports.updatePost = (req, res, next) => {
+//   let post = req.post;
+//   post = _.extend(post, req.body);
+//   post.updated = Date.now();
+//   post.save(error => {
+//     if (error) {
+//       return res.status(400).json({
+//         error: error
+//       });
+//     }
+//     res.json(post);
+//   });
+// };
+
 exports.updatePost = (req, res, next) => {
-  let post = req.post;
-  post = _.extend(post, req.body);
-  post.updated = Date.now();
-  post.save(error => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, (error, fields, files) => {
     if (error) {
       return res.status(400).json({
-        error: error
+        error: 'Photo could not be uploaded'
       });
     }
-    res.json(post);
+    let post = req.post;
+    post = _.extend(post, fields);
+    post.updated = Date.now();
+
+    if (files.photo) {
+      post.photo.data = fs.readFileSync(files.photo.path);
+      post.photo.contentType = files.photo.type;
+    }
+    post.save((error, result) => {
+      if (error) {
+        return res.status(400).json({
+          error: error
+        });
+      }
+      res.json(post);
+    });
   });
 };
 
