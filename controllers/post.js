@@ -20,7 +20,7 @@ exports.postById = (req, res, next, id) => {
 exports.getPosts = (req, res) => {
   const posts = Post.find()
     .populate('postedBy', '_id name')
-    .select('_id title body created')
+    .select('_id title body created likes')
     .sort({ created: -1 })
     .then(posts => {
       res.json(posts);
@@ -59,6 +59,7 @@ exports.createPost = (req, res, next) => {
 exports.postsByUser = (req, res) => {
   Post.find({ postedBy: req.profile._id })
     .populate('postedBy', '_id name')
+    .select('_id title body created likes')
     .sort('_created')
     .exec((error, posts) => {
       if (error) {
@@ -144,4 +145,40 @@ exports.photo = (req, res, next) => {
 
 exports.singlePost = (req, res) => {
   return res.json(req.post);
+};
+
+exports.like = (req, res) => {
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $push: { likes: req.body.userId }
+    },
+    { new: true }
+  ).exec((error, result) => {
+    if (error) {
+      return res.status(400).json({
+        error: error
+      });
+    } else {
+      res.json(result);
+    }
+  });
+};
+
+exports.unlike = (req, res) => {
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $pull: { likes: req.body.userId }
+    },
+    { new: true }
+  ).exec((error, result) => {
+    if (error) {
+      return res.status(400).json({
+        error: error
+      });
+    } else {
+      res.json(result);
+    }
+  });
 };
