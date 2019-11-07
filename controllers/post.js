@@ -6,6 +6,8 @@ const fs = require('fs');
 exports.postById = (req, res, next, id) => {
   Post.findById(id)
     .populate('postedBy', '_id name')
+    .populate('comments.postedBy', '_id name')
+    .populate('postedBy', '_id name')
     .exec((error, post) => {
       if (error || !post) {
         return res.status(400).json({

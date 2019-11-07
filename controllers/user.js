@@ -94,7 +94,7 @@ exports.updateUser = (req, res, next) => {
 
 exports.userPhoto = (req, res, next) => {
   if (req.profile.photo.data) {
-    res.set('Content-Type', req.profile.photo.contentType);
+    res.set(('Content-Type', req.profile.photo.contentType));
     return res.send(req.profile.photo.data);
   }
   next();
